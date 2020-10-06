@@ -1,0 +1,23 @@
+{
+    "name": "todo-app",
+    "version": "0.1.0",
+    "description": "Todo App based on React/MUI and NodeJS/Express and Mongoose/MongoDB",
+    "author": {
+        "name": "TawalMc",
+        "twitter": "@Tawal_Mc"
+    },
+    "license": "MIT",
+    "scripts": {
+        "client": "cd client && yarn start",
+        "server": "cd server && nodemon index.js",
+        "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
+        
+    },
+    "keywords": [
+        "node",
+        "express",
+        "react",
+        "material-ui",
+        "mongodb"
+    ]
+}
