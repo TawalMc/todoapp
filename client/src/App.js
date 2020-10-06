@@ -1,8 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+  useEffect(() => {
+    hello();
+  }, [])
+
+  function hello() {
+    fetch("/api/hello")
+    .then(response => response.json())
+    .then(data => console.log(data))
+    .catch(err => console.log(err));
+  }
+
   return (
     <div className="App">
       <header className="App-header">
