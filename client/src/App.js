@@ -1,8 +1,16 @@
-import React, {useEffect} from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from 'react-router-dom';
 
-function App() {
+import SignUp from './pages/signup/signup';
+import SignIn from './pages/signin/signin';
+import Dashboard from './pages/dashboard/dashboard';
+
+
+const App = () => {
 
   useEffect(() => {
     hello();
@@ -10,28 +18,19 @@ function App() {
 
   function hello() {
     fetch("/api/hello")
-    .then(response => response.json())
-    .then(data => console.log(data))
-    .catch(err => console.log(err));
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path='/' component={SignUp} />
+        <Route path='/signin' component={SignIn} />
+        <Route path='/dashboard' component={Dashboard} />
+      </Switch>
+    </Router>
   );
 }
 
