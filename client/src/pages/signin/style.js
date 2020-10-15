@@ -15,5 +15,5 @@ export default makeStyles(theme => ({
         fontFamily: ["Old English Text MT", "Harlow Solid Italic", "Algerian"],
         fontSize: 25,
         color: "#FFCEA2",
-    },
+    }
 }));

@@ -37,7 +37,7 @@ const CustomOutlinedInput = withStyles({
   },
   input: {
     color: "#FFCEA2",
-    fontSize: 20,
+    fontSize: 18,
   },
 })(OutlinedInput);
 
@@ -48,27 +48,26 @@ const CustomInputLabel = withStyles({
 })(InputLabel)
 
 
-
 const useStyles = makeStyles({
     root: {    
         marginBottom: theme.spacing(2)
     },
     inputLabel: {
-        fontSize: 20
+        fontSize: 18
     }
 })
 
-const CustomInput = (props) => {
+function CustomInput(props) {
   const classes = useStyles()
   
   function IconToDisplay({type}) {
-      if(type == "mail") {
+      if(type === "mail") {
           return <AlternateEmailOutlinedIcon style={{ color: "#FFCEA2" }} />
       }
-      else if (type == "pswd") {
+      else if (type === "pswd") {
           return <LockOutlinedIcon style={{ color: "#FFCEA2" }} />
       }
-      else if (type == "data") {
+      else if (type === "data") {
           return <PermIdentityOutlinedIcon style={{ color: "#FFCEA2" }} />
       }
   } 
