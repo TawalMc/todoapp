@@ -25,6 +25,7 @@ const theme = createMuiTheme({
 
 const CustomOutlinedInput = withStyles({
   root: {
+    width: "100%",
     "& fieldset": {
       borderColor: "#FFCEA2",
       borderWidth: 1,
