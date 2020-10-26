@@ -1,4 +1,6 @@
 const validator = require("validator");
+const User = require("../models/user");
+const sendMailToUser = require("./sendMail");
 
 const VALIDATE_RIGHT = "RIGHT",
   VALIDATE_WRONG = "WRONG";
@@ -35,9 +37,7 @@ const dataFormSanitized = (mail, pswd, pswdConf) => {
   };
 };
 
-const sign_validation = (mail, pswd, pswdConf) => {
-  const formSanitized = dataFormSanitized(mail, pswd, pswdConf);
-
+const signValidation = (formSanitized) => {
   const validateStatus =
     validateMail(formSanitized.usermail) ===
     validatePassword(formSanitized.password, formSanitized.passwordConfirm)
@@ -46,7 +46,8 @@ const sign_validation = (mail, pswd, pswdConf) => {
 
   return {
     type: "validation",
-    usermail: validateMail(formSanitized.usermail),
+    usermail: formSanitized.usermail,
+    usermailmsg: validateMail(formSanitized.usermail),
     password: validatePassword(
       formSanitized.password,
       formSanitized.passwordConfirm
@@ -55,12 +56,31 @@ const sign_validation = (mail, pswd, pswdConf) => {
   };
 };
 
+/**
+ *
+ * @param {bool} mailStatus
+ * @param {bool/null} pswdStatus
+ * @param {} status
+ */
+// If user mail already existed so mailStatus = true
+const userRegistrationStatus = (usermail, mailStatus, pswdStatus, status) => {
+  return {
+    type: "registration",
+    usermail: usermail,
+    usermailmsg:
+      mailStatus == true
+        ? "usermail is already exited. Go to signin"
+        : "usermail is in registration.",
+    password: pswdStatus,
+    status: status,
+  };
+};
 /// SIGN UP CONTROLLERS
 
 // (POST) check validation on sign up page
 exports.signup_validation_post = (req, res, next) => {
   res.send(
-    sign_validation(
+    signValidation(
       req.body.usermail,
       req.body.password,
       req.body.passwordConfirm
@@ -70,28 +90,90 @@ exports.signup_validation_post = (req, res, next) => {
 
 // (POST) create user in database on sign up page
 exports.signup_create_user_post = (req, res, next) => {
-  const signupValidation = sign_validation(
+  const formSanitized = dataFormSanitized(
     req.body.usermail,
     req.body.password,
     req.body.passwordConfirm
   );
 
-  if(signupValidation.status === VALIDATE_WRONG)  {
+  const signupValidation = signValidation(formSanitized);
+
+  if (signupValidation.status === VALIDATE_WRONG) {
     res.send(signupValidation);
     return;
-  };
+  }
+
+  const newUser = new User({
+    usermail: formSanitized.usermail,
+    password: formSanitized.password,
+  });
+
+  User.findOne({ usermail: newUser.usermail }).exec((err, found_user) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (found_user) {
+      res.send(
+        userRegistrationStatus(
+          formSanitized.usermail,
+          true,
+          null,
+          VALIDATE_WRONG
+        )
+      );
+      return;
+    } else {
+      newUser.save((err) => {
+        if (err) {
+          next(err);
+        }
+
+        res.send(
+          userRegistrationStatus(
+            formSanitized.usermail,
+            false,
+            null,
+            VALIDATE_RIGHT
+          )
+        );
+        return;
+      });
+    }
+  });
+};
+
+// Check if usermail exist or not or if it is the mail owner who try to registred
+exports.check_mail_registration_is_available = (req, res, next) => {
+  let num = 123456;
+
+  var returnMessage;
+  
+  /* User.findOneAndUpdate({usermail: req.body.usermail}, {confirmation_code: num}, (err, found_user) => {
+    if(err)  
+  }) */
+
+  sendMailToUser(
+    req.body.usermail,
+    "Email confirmation to todo app user.",
+    num
+  );
 
   res.send({
-    tol: "Blabla",
-    tal: "Bloblo"
-  })
+    type: "mail confirmation",
+    usermail: req.body.usermail,
+    usermailmsg: "",
+    password: null,
+    code: num,
+    status: "PENDING",
+  });
 };
 
 /// SIGN IN CONTROLLERS
 
 // (POST) check validation on sign in page
 exports.signin_validation_post = (req, res, next) => {
-  res.send(sign_validation(req.body.usermail, req.body.password, null));
+  res.send(signValidation(req.body.usermail, req.body.password, null));
 };
 
 // (GET) get user data

@@ -5,6 +5,13 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const compression = require("compression");
 const helmet = require("helmet");
+const mongoose = require("mongoose");
+
+// Setup mongoose connection
+const dbUrl = "mongodb+srv://mcdb:2222Engineer2222Access@clustermern.tgsjl.gcp.mongodb.net/user_todo?retryWrites=true&w=majority";
+mongoose.connect(dbUrl, {useNewUrlParser: true, useUnifiedTopology: true});
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "MongoDB connection error"));
 
 // Configuration
 const port = process.env.PORT || 5000;

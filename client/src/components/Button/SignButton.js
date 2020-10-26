@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {withStyles} from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import { SubmitButtonContext } from '../../pages/signup/signup';
 
 const ConnectButton = withStyles((theme) => ({
   root: {
@@ -17,9 +18,11 @@ const ConnectButton = withStyles((theme) => ({
 }))(Button);
 
 export default function SignButton(props) {
+  const submit = useContext(SubmitButtonContext)
+  
   return (
     <div>
-      <ConnectButton variant="contained" >
+      <ConnectButton variant="contained" onClick={submit}>
         {props.text}
       </ConnectButton>
     </div>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 
 import {
   makeStyles,
@@ -14,6 +14,7 @@ import IconButton from "@material-ui/core/IconButton";
 import AlternateEmailOutlinedIcon from "@material-ui/icons/AlternateEmailOutlined";
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import PermIdentityOutlinedIcon from '@material-ui/icons/PermIdentityOutlined';
+import { HandleInputChange } from "../../pages/signup/signup";
 
 const theme = createMuiTheme({
   palette: {
@@ -59,6 +60,8 @@ const useStyles = makeStyles({
 })
 
 function CustomInput(props) {
+  const handleInputChange = useContext(HandleInputChange)
+
   const classes = useStyles()
   
   function IconToDisplay({type}) {
@@ -78,6 +81,7 @@ function CustomInput(props) {
       <FormControl variant="outlined" color="primary" className={classes.root} >
         <CustomInputLabel htmlFor={props.targetId} className={classes.inputLabel}>{props.label}</CustomInputLabel>
         <CustomOutlinedInput
+          onChange={(e) => handleInputChange(e, props.targetId)}
           id={props.targetId}
           type={props.type === "pswd" ? "password" : "text"}
           endAdornment={

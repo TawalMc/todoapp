@@ -12,6 +12,10 @@ router.post("/signup/validation", sign_controller.signup_validation_post);
 // POST request for crating user account in DB.
 router.post("/signup/createUser", sign_controller.signup_create_user_post);
 
+// POST request to validate user mail
+router.post("/signup/validateMail", sign_controller.check_mail_registration_is_available);
+
+
 /// SIGN IN ROUTES ///
 
 // POST request to check server-side validation on sign in page. 
